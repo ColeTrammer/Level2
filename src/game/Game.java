@@ -7,7 +7,6 @@ public class Game {
 	public Game() {
 		rm = new ResourceManager();
 		rm.start();
-		
 	}
 	
 	public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,13 +21,12 @@ public class Renderer extends JPanel implements ActionListener {
 		timer.start();
 	}
 
-	public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g){
 		g.fillRect(10, 10, 100, 100);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		repaint();
+		super.repaint();
 	}
-	
 }
