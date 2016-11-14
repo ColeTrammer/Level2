@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	final int MENU_STATE = 0;
@@ -23,12 +24,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	RocketShip ship;
 	Font titleFont;
 	Font headerFont;
+	ObjectManager manager;
 	
 	public GamePanel() {
 		titleFont = new Font("Arial", Font.PLAIN, 48);
 		headerFont = new Font("Arial", Font.PLAIN, 24);
 		timer = new Timer(1000 / 60, this);
 		ship = new RocketShip(250, 700, 50, 50);
+		manager = new ObjectManager();
+		manager.addObject(ship);
 	}
 
 	public void paintComponent(Graphics g){
@@ -44,7 +48,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	public void updateGameState() {
-		ship.update(up, down, left, right);
+		ship.setDirections(up, down, right, left);
+		manager.updateObjects();
+		if (!ship.isAlive) {
+			currentState = END_STATE;
+		}
 	}
 	
 	public void updateEndState() {
@@ -63,7 +71,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	public void drawGameState(Graphics g) {
-		ship.draw(g);
+		manager.drawObjects(g);
 	}
 	
 	public void drawEndState(Graphics g) {
@@ -73,7 +81,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setFont(titleFont);
 		g.drawString("GAME OVER", 120, 100);
 		g.setFont(headerFont);
-		g.drawString("You killed 0 aliens.", 150, 300);
+		g.drawString("You killed " + manager.getScore() + " aliens.", 150, 300);
 		g.drawString("Press BACKSPACE to restart", 100, 500);
 	}
 	
@@ -102,10 +110,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		else if (e.getKeyCode() == KeyEvent.VK_DOWN) down = true; 
 		else if (e.getKeyCode() == KeyEvent.VK_RIGHT) right = true;
 		else if (e.getKeyCode() == KeyEvent.VK_LEFT) left = true;
+		else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			manager.addObject(new Projectile(ship.x + ship.width / 2 - 5, ship.y, 10, 10));
+		}
 		else {
 			currentState++;
-			if (currentState > END_STATE)
+			if (currentState > END_STATE) {
 				currentState = 0;
+				ship = new RocketShip(250, 700, 50, 50);
+				manager.reset();
+				manager.addObject(ship);
+			}
 		}
 	}
 
