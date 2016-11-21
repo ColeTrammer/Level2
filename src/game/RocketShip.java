@@ -14,11 +14,15 @@ public class RocketShip extends GameObject {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		speed = -5;
+		speed = -7;
 	}
 	
 	public void update() {
 		super.update();
+		if (x + GamePanel.rocketImg.getWidth() / 2 < 0) x = LeagueInvaders.WIDTH - GamePanel.rocketImg.getWidth() / 2;
+		if (x - GamePanel.rocketImg.getWidth() / 2 > LeagueInvaders.WIDTH) x = 0 - GamePanel.rocketImg.getWidth() / 2;
+		if (y < 0) y = LeagueInvaders.HEIGHT;
+		if (y > LeagueInvaders.HEIGHT - 80) y += speed;
 		if (up) y += speed;
 		if (down) y -= speed;
 		if (right) x -= speed;
@@ -26,8 +30,7 @@ public class RocketShip extends GameObject {
 	}
 	
 	public void draw(Graphics g) {
-		g.setColor(Color.BLUE);
-		g.fillRect(x, y, width, height);
+		g.drawImage(GamePanel.rocketImg, x, y, width, height, null);
 	}
 	
 	public void setDirections(boolean u, boolean d, boolean r, boolean l) {

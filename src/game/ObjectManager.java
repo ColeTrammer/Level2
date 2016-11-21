@@ -9,11 +9,13 @@ public class ObjectManager {
 	
 	ArrayList<GameObject> objects;
 	Random r;
-	int score;
+	int score, ran;
 	
 	public ObjectManager() {
 		objects = new ArrayList<GameObject>();
 		r = new Random();
+		ran = 40;
+		//ran = 1;
 	}
 	
 	public void addObject(GameObject object) {
@@ -27,7 +29,6 @@ public class ObjectManager {
 			object.update();
 		}
 		purgeObjects();
-		System.out.println(objects.size());
 	}
 	
 	public void drawObjects(Graphics g) {
@@ -45,7 +46,8 @@ public class ObjectManager {
 	}
 	
 	private void manageEnemies() {
-		if (r.nextInt(5) == 0) {
+		if (ran < 10) ran = 10;
+		if (r.nextInt(ran) == 0) {
 			objects.add(new Alien(r.nextInt(LeagueInvaders.WIDTH), 10, 25, 25));
 		}
 	}
@@ -60,6 +62,7 @@ public class ObjectManager {
 					if((o1 instanceof Alien && o2 instanceof Projectile) ||
 					   (o2 instanceof Alien && o1 instanceof Projectile)){
 						score++;
+						ran--;
 						o1.isAlive = false;
 						o2.isAlive = false;
 					}
